@@ -1,1 +1,7 @@
-<p>map-page works!</p>
+<app-loading *ngIf="!isUserLocationAvailable; else mapReady"></app-loading>
+
+<ng-template #mapReady>
+  <app-map-view></app-map-view>
+  <app-btn-my-location></app-btn-my-location>
+  <app-angular-logo></app-angular-logo>
+</ng-template>

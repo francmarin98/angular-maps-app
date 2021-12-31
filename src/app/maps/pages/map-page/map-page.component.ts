@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
+import {PlacesService} from "../../services";
 
 @Component({
   selector: 'app-map-page',
   templateUrl: './map-page.component.html',
   styleUrls: ['./map-page.component.css']
 })
-export class MapPageComponent implements OnInit {
+export class MapPageComponent {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private placeService: PlacesService) {
   }
 
+  get isUserLocationAvailable() {
+    return this.placeService.isUserLocationAvailable;
+  }
 }
