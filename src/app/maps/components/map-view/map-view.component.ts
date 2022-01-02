@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {PlacesService} from "../../services";
+import {MapService, PlacesService} from "../../services";
 import {Map, Popup, Marker} from "mapbox-gl";
 
 @Component({
@@ -10,12 +10,15 @@ import {Map, Popup, Marker} from "mapbox-gl";
 export class MapViewComponent implements AfterViewInit {
 
   @ViewChild('mapDiv') mapDiv?: ElementRef;
-  constructor(private placesService: PlacesService) {
-  }
 
-  ngAfterViewInit(){
+  constructor(
+    private placesService: PlacesService,
+    private mapService: MapService)
+  {}
 
-    if(!this.placesService.userLocation) throw new Error("UserLocation is not available");
+  ngAfterViewInit() {
+
+    if (!this.placesService.userLocation) throw new Error("UserLocation is not available");
 
     const map = new Map({
       container: this.mapDiv?.nativeElement, // container ID
@@ -31,6 +34,8 @@ export class MapViewComponent implements AfterViewInit {
     `);
 
     new Marker().setPopup(popup).setLngLat(this.placesService.userLocation).addTo(map);
+
+    this.mapService.setMap(map);
   }
 
 }
