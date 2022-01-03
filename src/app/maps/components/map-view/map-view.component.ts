@@ -33,7 +33,7 @@ export class MapViewComponent implements AfterViewInit {
         <p>En algún lugar cerca de aquí</p>
     `);
 
-    new Marker().setPopup(popup).setLngLat(this.placesService.userLocation).addTo(map);
+    new Marker({color: 'red'}).setPopup(popup).setLngLat(this.placesService.userLocation).addTo(map);
 
     this.mapService.setMap(map);
   }
