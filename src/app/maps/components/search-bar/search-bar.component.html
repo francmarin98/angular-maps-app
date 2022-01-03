@@ -5,7 +5,7 @@
     class="form-control"
     placeholder="Buscar lugar..."
     #txtQuery
-    (keyup)="onQueryChanged(txtQuery.value)"
+    (keyup.enter)="onQueryChanged(txtQuery.value)"
   >
 
   <app-search-results></app-search-results>
