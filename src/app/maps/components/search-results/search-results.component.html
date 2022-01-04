@@ -13,6 +13,7 @@
     <p>{{place.place_name_es}}</p>
     <button (click)="flyTo(place)"
             class="btn btn-sm"
+            (click)="createRoute(place)"
             [ngClass]="(place.id === selectedId) ? 'btn-outline-light' : 'btn-outline-primary' "
     >
       <i class="fas fa-route"></i>

@@ -5,25 +5,23 @@ import {environment} from "../../../environments/environment";
 @Injectable({
   providedIn: "root"
 })
-export class PlacesAPIClient extends HttpClient {
-  public baseUrlMapbox: string = environment.baseUrlPlacesMapbox;
+export class DirectionsAPIClient extends HttpClient {
+  public baseUrlMapbox: string = environment.baseUrlDirectionsMapbox;
 
   constructor(handler: HttpHandler) {
     super(handler);
   }
 
-  public override get<T>(url: string, options: {
-    params?: HttpParams | {
-      [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-    };
-  }) {
+  public override get<T>(url: string) {
     url = this.baseUrlMapbox + url;
     return super.get<T>(url, {
       params: {
-        limit: 5,
+        alternatives: false,
+        geometries: 'geojson',
         language: 'es',
-        access_token: environment.access_token,
-        ...options.params
+        overview: 'simplified',
+        steps: false,
+        access_token: environment.access_token
       }
     });
   }

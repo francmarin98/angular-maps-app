@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {LngLatBounds, LngLatLike, Map, Marker, Popup} from "mapbox-gl";
 import {Feature} from "../interfaces/places";
+import {DirectionsAPIClient} from "../api/directionsAPIClient";
+import {DirectionResponse, Route} from "../interfaces/directions";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class MapService {
   private map?: Map;
   private markers: Marker[] = [];
 
-  constructor() {
+  constructor(private directionsAPIClient: DirectionsAPIClient) {
   }
 
   get isMapReady(): boolean {
@@ -27,7 +29,7 @@ export class MapService {
     this.map?.flyTo({zoom: 14, center: coords});
   }
 
-  createMarkersFromPlaces(places: Feature[]) {
+  createMarkersFromPlaces(places: Feature[], userLocation: [number, number]) {
 
     if (!this.map) throw Error('Mapa no inicializado');
 
@@ -56,13 +58,38 @@ export class MapService {
     if (places.length === 0) return;
 
     // Limites del mapa
-    // const bounds = new LngLatBounds();
-    // newMarkers.forEach(marker => bounds.extend(marker.getLngLat()));
-    // bounds.extend(userLocation);
-    //
-    // this.map.fitBounds(bounds, {
-    //   padding: 200
-    // });
+    const bounds = new LngLatBounds();
+    newMarkers.forEach(marker => bounds.extend(marker.getLngLat()));
+    bounds.extend(userLocation);
 
+    this.map.fitBounds(bounds, {
+      padding: 200
+    });
+
+  }
+
+  getPointsBetweenToPoints(start: [number, number], end: [number, number]) {
+    this.directionsAPIClient.get<DirectionResponse>(`/mapbox/driving/${start.join(',')};${end.join(',')}`).subscribe(data => {
+      this.drawPolyline(data.routes[0])
+    })
+  }
+
+  drawPolyline(route: Route) {
+    console.log({
+      kms: route.distance / 1000,
+      duration: route.duration / 60,
+    });
+
+    if (!this.map) throw Error('Map is not initialized');
+
+    const coords = route.geometry.coordinates;
+    const bounds = new LngLatBounds();
+    coords.forEach(([lng, lat]) => {
+      bounds.extend([lng, lat])
+    });
+
+    this.map?.fitBounds(bounds, {
+      padding: 200
+    });
   }
 }

@@ -27,4 +27,11 @@ export class SearchResultsComponent {
     this.selectedId = place.id;
     this.mapService.flyTo([longitude, latitude]);
   }
+
+  createRoute(place: Feature) {
+    if (!this.placesService.userLocation) throw Error('No hay userLocation');
+    const start = this.placesService.userLocation;
+    const end = place.center as [number, number];
+    this.mapService.getPointsBetweenToPoints(start, end)
+  }
 }
